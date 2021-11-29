@@ -1,0 +1,44 @@
+# build/artifact dirs
+_*
+# but ensure we don't skip __init__.py and __main__.py
+!__init__.py
+!__main__.py
+
+# developer tools
+*.idea
+cmake-build-*
+.DS_Store
+**/tags
+compile_commands.json
+bin/
+build/
+.local_vimrc
+.gdb_history
+.vimspector.json
+*.ll
+*.bc
+
+.repo/
+CMakeLists.txt.user
+
+*.project
+*.cproject
+*.pydevproject
+*.settings
+*/gen/
+__pycache__
+*.swp
+/config.xml
+
+# Python-specific
+*.env3
+*.pyc
+
+# Tests-specific
+*.coverage
+*htmlcov
+*pylint_report.txt
+*pylint_report_comments.txt
+
+# Artifacts
+*.bin

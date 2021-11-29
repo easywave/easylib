@@ -1,0 +1,9 @@
+{
+    "cmake.generator": "Unix Makefiles",
+    "cmake.installPrefix": "${workspaceFolder}/build/install",
+    "cmake.configureSettings": {
+        "CMAKE_INSTALL_PREFIX": "${workspaceFolder}/build/install",
+        "CMAKE_CXX_COMPILER": "/usr/bin/clang++-6.0",
+        "CMAKE_C_COMPILER": "/usr/bin/clang-6.0",
+    }
+}

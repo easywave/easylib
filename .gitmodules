@@ -1,0 +1,14 @@
+[submodule "thirdparty/gtest/gtest"]
+	path = thirdparty/gtest/gtest
+	url = https://github.com/openvinotoolkit/googletest.git
+	ignore = dirty
+[submodule "thirdparty/ittapi/ittapi"]
+	path = thirdparty/ittapi/ittapi
+	url = https://github.com/intel/ittapi.git
+
+[submodule "thirdparty/xsimd/xsimd"]
+	path = thirdparty/xsimd/xsimd
+	url = https://github.com/easywave/xsimd
+[submodule "thirdparty/easyjit/easyjit"]
+	path = thirdparty/easyjit/easyjit
+	url = https://github.com/easywave/easy-just-in-time.git
