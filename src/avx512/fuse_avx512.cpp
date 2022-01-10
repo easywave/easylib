@@ -7,6 +7,8 @@
 //       2, do not depend function in other cpp
 #include "fuse_private.h"
 
+namespace easy {
+
 template b_t<float, xsimd::avx512f> EASY_JIT_EXPOSE add(b_t<float, xsimd::avx512f> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c);
 
 template b_t<float, xsimd::avx512f> EASY_JIT_EXPOSE sub(b_t<float, xsimd::avx512f> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c);
@@ -20,3 +22,5 @@ template b_t<float, xsimd::avx512f> EASY_JIT_EXPOSE add_c(b_t<float, xsimd::avx5
 template b_t<float, xsimd::avx512f> EASY_JIT_EXPOSE sub_c(b_t<float, xsimd::avx512f> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c);
 
 template b_t<float, xsimd::avx512f> EASY_JIT_EXPOSE mul_c(b_t<float, xsimd::avx512f> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c);
+
+}

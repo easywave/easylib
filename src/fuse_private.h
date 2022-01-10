@@ -14,10 +14,11 @@
 #include "xsimd.h"
 #include "fuse_public.h"
 
+namespace easy {
 template<class Type, class Arch>
 using b_t = xsimd::batch<Type, Arch>;
 struct CallerContext {
-    int x, y, z;    // loop idx, inner -> outer
+    int x;    // loop idx, inner -> outer
 };
 
 template<class Type, class Arch>
@@ -35,7 +36,7 @@ struct FuseConstAlgParamPrivate {
     extern template b_t<float, xsimd::avx2> func(b_t<float, xsimd::avx2> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c); \
     extern template b_t<float, xsimd::avx512f> func(b_t<float, xsimd::avx512f> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c);
 
-#define ADDR(c, p, type) (type*)(p.addr + c.z * p.stride_xy + c.y * p.stride_x + c.x * b_t<T, A>::size * sizeof(T))
+#define ADDR(c, p, type) (type*)(p.addr + c.x * b_t<T, A>::size * sizeof(T))
 template<class T, class A>
 b_t<T, A> add(b_t<T, A> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c) {
     b_t<T, A> y = b_t<T, A>::load(ADDR(context, param_m, float), xsimd::unaligned_mode());
@@ -110,11 +111,12 @@ FuseConstAlgParamPrivate<Type, Arch> ConvertFuseParams(const FuseConstParams& pa
 
 // sequence fuse interface: result = g(f(x))
 template<class Type, class Arch>
-static b_t<Type, Arch> seq_fuse(b_t<Type, Arch> x, int idx_x, int idx_y, int idx_z, const FuseMutableParams& param_m, const FuseConstAlgParamPrivate<Type, Arch>& params) {
-    CallerContext context{idx_x, idx_y, idx_z};
+static b_t<Type, Arch> seq_fuse(b_t<Type, Arch> x, int idx_x, const FuseMutableParams& param_m, const FuseConstAlgParamPrivate<Type, Arch>& params) {
+    CallerContext context{idx_x};
     for (int i = 0; i < params.funcs_num; i++) {
         x = params.funcs[i](x, context, param_m.params[i], params.params[i]);
     }
 
     return x;
+}
 }

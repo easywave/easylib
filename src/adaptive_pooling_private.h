@@ -13,6 +13,7 @@
 #include "xsimd.h"
 #include "fuse_private.h"
 
+namespace easy {
 static inline void setBinBorders(size_t *startPtr, size_t *endPtr, size_t idx, size_t inputLength, size_t outputLength) {
     *(startPtr) = idx * inputLength / outputLength;
     *(endPtr) = ceil(static_cast<float>((idx + 1) * inputLength) / outputLength);
@@ -46,6 +47,7 @@ void poolAvgT(Arch*, const float *srcData, float *dstData, int od, int oh, int o
     }
     //*dstData = sum / binSize;
     auto res = sum / binSize;
-    res = seq_fuse(res, 0, 0, 0, params_m, params_c);
+    res = seq_fuse(res, 0, params_m, params_c);
     xsimd::store(dstData, res, xsimd::unaligned_mode());
+}
 }

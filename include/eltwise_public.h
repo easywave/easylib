@@ -10,17 +10,15 @@
 #include "fuse_public.h"
 #include <easy/jit.h>
 
+namespace easy {
 struct EltwiseMutableParam {
     void *src_x;    // src x addr
-    int strides_x[3];
 
     void *src_y;    // src y addr
-    int strides_y[3];
 
     void *dst_d;    // dst addr
-    int strides_d[3];
 
-    int dims[3];
+    int number;
     // EltwiseMutableParam() {
     //     memset(this, 0, sizeof(*this));
     // }
@@ -52,3 +50,5 @@ void eltwise(const EltwiseConstParam& params_c, const EltwiseMutableParam& param
 //  3, Call _avg() to do the actual compute
 // TODO: multithread support
 EltwiseFunc getEltwiseFunc(const easy::RawBytes& raw, const EltwiseConstParam& params_c, const FuseConstParams& fuse_params_c);
+
+}

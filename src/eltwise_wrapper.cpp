@@ -12,6 +12,7 @@
 #include "eltwise_public.h"
 #include "fuse_private.h"
 
+namespace easy {
 template <class Type, class Arch>
 void eltwiseT(Arch*, const EltwiseConstParam params_c, const EltwiseMutableParam& params_m, const FuseConstAlgParamPrivate<Type, Arch> fuse_params_c, const FuseMutableParams& fuse_params_m);
 
@@ -57,4 +58,5 @@ EltwiseFunc getEltwiseFunc(const easy::RawBytes& raw, const EltwiseConstParam& p
         return f;
     }
     return EltwiseFunc{nullptr};
+}
 }

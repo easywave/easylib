@@ -9,6 +9,7 @@
 #include <memory.h>
 #include <stdint.h>
 
+namespace easy {
 enum class AlgType {
     // Unary: x = f(x)
     Abs,
@@ -57,3 +58,4 @@ struct FuseMutableParams {
         memset(this, 0, sizeof(*this));
     }
 };
+}

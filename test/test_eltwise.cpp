@@ -5,8 +5,9 @@
 #include "eltwise_public.h"
 #include "gtest/gtest.h"
 
+using namespace easy;
 TEST(Eltwise, Func) {
-    easy::RawBytes raw;
+    RawBytes raw;
     EltwiseConstParam params_c;
     FuseConstParams fuse_params_c;
     auto f = getEltwiseFunc(raw, params_c, fuse_params_c);

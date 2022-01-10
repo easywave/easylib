@@ -10,7 +10,8 @@
 #include "fuse_public.h"
 #include <easy/jit.h>
 
-using AvgFunc = easy::FunctionWrapper<void(const float *, float *, int, int, int, size_t, const size_t inStrides[5], const FuseMutableParams&)>;
+namespace easy {
+using AvgFunc = FunctionWrapper<void(const float *, float *, int, int, int, size_t, const size_t inStrides[5], const FuseMutableParams&)>;
 
 // raw optimization function
 //  when debugging we can call this function directly
@@ -24,3 +25,5 @@ void poolAvg(const float *srcData, float *dstData, int od, int oh, int ow, size_
 //  3, Call _avg() to do the actual compute
 // TODO: multithread support
 AvgFunc getAvgFunc(const easy::RawBytes& raw, size_t ID, size_t OD, size_t IH, size_t OH, size_t IW, size_t OW, const FuseConstParams& params_c);
+
+}

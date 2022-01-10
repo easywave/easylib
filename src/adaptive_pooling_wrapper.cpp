@@ -12,6 +12,7 @@
 #include "adaptive_pooling_public.h"
 #include "fuse_private.h"
 
+namespace easy {
 template <class Arch>
 void poolAvgT(Arch*, const float *srcData, float *dstData, int od, int oh, int ow, size_t spatIndOff,
     const size_t inStrides[5], size_t ID, size_t OD, size_t IH, size_t OH, size_t IW, size_t OW, const FuseConstAlgParamPrivate<float, Arch> param_c, const FuseMutableParams& params_m);
@@ -65,4 +66,5 @@ AvgFunc getAvgFunc(const easy::RawBytes& raw, size_t ID, size_t OD, size_t IH, s
         return avg;
     }
     return AvgFunc{nullptr};
+}
 }
