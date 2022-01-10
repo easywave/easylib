@@ -40,20 +40,20 @@ void poolAvg(const float *srcData, float *dstData, int od, int oh, int ow, size_
     }
 }
 
-AvgFunc getAvgFunc(const easy::RawBytes& raw, size_t ID, size_t OD, size_t IH, size_t OH, size_t IW, size_t OW, const FuseConstParams& params) {
+AvgFunc getAvgFunc(size_t ID, size_t OD, size_t IH, size_t OH, size_t IW, size_t OW, const FuseConstParams& params) {
     using namespace std::placeholders;
     auto arch = xsimd::available_architectures();
     if (arch.avx512f) {
         const auto paramPrivate = ConvertFuseParams<float, xsimd::avx512f>(params);
         xsimd::avx512f arch;
-        auto avg = easy::jit_(raw, poolAvgT<xsimd::avx512f>, &arch, _1, _2, _3, _4, _5, _6, _7,
+        auto avg = easy::jit(poolAvgT<xsimd::avx512f>, &arch, _1, _2, _3, _4, _5, _6, _7,
             ID, OD, IH, OH, IW, OW, paramPrivate, _8);
         return avg;
     }
     else if (arch.avx2) {
         const auto paramPrivate = ConvertFuseParams<float, xsimd::avx2>(params);
         xsimd::avx2 arch;
-        auto avg = easy::jit_(raw, poolAvgT<xsimd::avx2>, &arch, _1, _2, _3, _4, _5, _6, _7,
+        auto avg = easy::jit(poolAvgT<xsimd::avx2>, &arch, _1, _2, _3, _4, _5, _6, _7,
             ID, OD, IH, OH, IW, OW, paramPrivate, _8, easy::options::dump_ir("zzz.ll"),
             easy::options::opt_level(2, 0));
         return avg;
@@ -61,7 +61,7 @@ AvgFunc getAvgFunc(const easy::RawBytes& raw, size_t ID, size_t OD, size_t IH, s
     else if (arch.sse4_2) {
         const auto paramPrivate = ConvertFuseParams<float, xsimd::sse4_2>(params);
         xsimd::sse4_2 arch;
-        auto avg = easy::jit_(raw, poolAvgT<xsimd::sse4_2>, &arch, _1, _2, _3, _4, _5, _6, _7,
+        auto avg = easy::jit(poolAvgT<xsimd::sse4_2>, &arch, _1, _2, _3, _4, _5, _6, _7,
             ID, OD, IH, OH, IW, OW, paramPrivate, _8);
         return avg;
     }

@@ -37,8 +37,6 @@ struct FuseConstAlgParam {
 struct FuseMutableAlgParam {
     // Binary will use
     uint64_t addr;         // address
-    int stride_x;          // x stride, unit is bytes
-    int stride_xy;         // x*y offset, unit is bytes
 };
 #define MAX_FUSE_NUM 10
 // const fuse algorithm and its parameter at runtime

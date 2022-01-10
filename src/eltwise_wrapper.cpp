@@ -35,26 +35,26 @@ void eltwise(const EltwiseConstParam& params_c, const EltwiseMutableParam& param
     }
 }
 
-EltwiseFunc getEltwiseFunc(const easy::RawBytes& raw, const EltwiseConstParam& params_c, const FuseConstParams& fuse_params_c) {
+EltwiseFunc getEltwiseFunc(const EltwiseConstParam& params_c, const FuseConstParams& fuse_params_c) {
     using namespace std::placeholders;
     auto arch = xsimd::available_architectures();
     if (arch.avx512f) {
         const auto paramPrivate = ConvertFuseParams<float, xsimd::avx512f>(fuse_params_c);
         xsimd::avx512f arch;
-        auto f = easy::jit_(raw, eltwiseT<float, xsimd::avx512f>, &arch, params_c, _1, paramPrivate, _2);
+        auto f = easy::jit(eltwiseT<float, xsimd::avx512f>, &arch, params_c, _1, paramPrivate, _2);
         return f;
     }
     else if (arch.avx2) {
         const auto paramPrivate = ConvertFuseParams<float, xsimd::avx2>(fuse_params_c);
         xsimd::avx2 arch;
-        auto f = easy::jit_(raw, eltwiseT<float, xsimd::avx2>, &arch, params_c, _1, paramPrivate, _2,
+        auto f = easy::jit(eltwiseT<float, xsimd::avx2>, &arch, params_c, _1, paramPrivate, _2,
             easy::options::dump_ir("zzz.ll"), easy::options::opt_level(2, 0));
         return f;
     }
     else if (arch.sse4_2) {
         const auto paramPrivate = ConvertFuseParams<float, xsimd::sse4_2>(fuse_params_c);
         xsimd::sse4_2 arch;
-        auto f = easy::jit_(raw, eltwiseT<float, xsimd::sse4_2>, &arch, params_c, _1, paramPrivate, _2);
+        auto f = easy::jit(eltwiseT<float, xsimd::sse4_2>, &arch, params_c, _1, paramPrivate, _2);
         return f;
     }
     return EltwiseFunc{nullptr};

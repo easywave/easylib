@@ -24,6 +24,6 @@ void poolAvg(const float *srcData, float *dstData, int od, int oh, int ow, size_
 //  2, Make the call '_avg = getAvgFunc' if _avg is null
 //  3, Call _avg() to do the actual compute
 // TODO: multithread support
-AvgFunc getAvgFunc(const easy::RawBytes& raw, size_t ID, size_t OD, size_t IH, size_t OH, size_t IW, size_t OW, const FuseConstParams& params_c);
+AvgFunc getAvgFunc(size_t ID, size_t OD, size_t IH, size_t OH, size_t IW, size_t OW, const FuseConstParams& params_c);
 
 }

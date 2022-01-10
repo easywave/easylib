@@ -49,6 +49,6 @@ void eltwise(const EltwiseConstParam& params_c, const EltwiseMutableParam& param
 //  2, Make the call '_avg = getAvgFunc' if _avg is null
 //  3, Call _avg() to do the actual compute
 // TODO: multithread support
-EltwiseFunc getEltwiseFunc(const easy::RawBytes& raw, const EltwiseConstParam& params_c, const FuseConstParams& fuse_params_c);
+EltwiseFunc getEltwiseFunc(const EltwiseConstParam& params_c, const FuseConstParams& fuse_params_c);
 
 }
