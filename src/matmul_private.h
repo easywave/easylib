@@ -33,12 +33,30 @@ void matmulT(Arch*, const MatmulConstParam params_c, const MatmulMutableParam& p
     b_t<Type, Arch> regCi0, regCi1;
     b_t<Type, Arch> regA0i0, regA0i1, regB0;
     b_t<Type, Arch> regA1i0, regA1i1, regB1;
-    for (i = 0; i < params_c.m / 2; i += 2) {
-        for (p = 0; p < params_c.k; p += 2) { // TODO: handle tail
+    b_t<Type, Arch> regA2i0, regA2i1, regB2;
+    b_t<Type, Arch> regA3i0, regA3i1, regB3;
+    b_t<Type, Arch> regA4i0, regA4i1, regB4;
+    b_t<Type, Arch> regA5i0, regA5i1, regB5;
+    b_t<Type, Arch> regA6i0, regA6i1, regB6;
+    b_t<Type, Arch> regA7i0, regA7i1, regB7;
+    for (i = 0; i < params_c.m / 2 * 2; i += 2) {
+        for (p = 0; p < params_c.k; p += 8) { // TODO: handle tail
             regA0i0 = b_t<Type, Arch>(A(i, p + 0));
             regA1i0 = b_t<Type, Arch>(A(i, p + 1));
+            regA2i0 = b_t<Type, Arch>(A(i, p + 2));
+            regA3i0 = b_t<Type, Arch>(A(i, p + 3));            
+            regA4i0 = b_t<Type, Arch>(A(i, p + 4));
+            regA5i0 = b_t<Type, Arch>(A(i, p + 5));
+            regA6i0 = b_t<Type, Arch>(A(i, p + 6));
+            regA7i0 = b_t<Type, Arch>(A(i, p + 7));    
             regA0i1 = b_t<Type, Arch>(A(i + 1, p + 0));
             regA1i1 = b_t<Type, Arch>(A(i + 1, p + 1));
+            regA2i1 = b_t<Type, Arch>(A(i + 1, p + 2));
+            regA3i1 = b_t<Type, Arch>(A(i + 1, p + 3));
+            regA4i1 = b_t<Type, Arch>(A(i + 1, p + 4));
+            regA5i1 = b_t<Type, Arch>(A(i + 1, p + 5));
+            regA6i1 = b_t<Type, Arch>(A(i + 1, p + 6));
+            regA7i1 = b_t<Type, Arch>(A(i + 1, p + 7));
             for (j = 0; j < params_c.n; j += inc) { // TODO: handle tail
                 ptrC0 = &C(i, j);
                 ptrC1 = &C(i + 1, j);
@@ -46,25 +64,50 @@ void matmulT(Arch*, const MatmulConstParam params_c, const MatmulMutableParam& p
                 regCi1 = b_t<Type, Arch>::load(ptrC1, xsimd::unaligned_mode());
                 regB0 = b_t<Type, Arch>::load(&B(p + 0, j), xsimd::unaligned_mode());
                 regB1 = b_t<Type, Arch>::load(&B(p + 1, j), xsimd::unaligned_mode());
-                regCi0 += regA0i0 * regB0 + regA1i0 * regB1;
-                regCi1 += regA0i1 * regB0 + regA1i1 * regB1;
-
+                regB2 = b_t<Type, Arch>::load(&B(p + 2, j), xsimd::unaligned_mode());
+                regB3 = b_t<Type, Arch>::load(&B(p + 3, j), xsimd::unaligned_mode());
+                regB4 = b_t<Type, Arch>::load(&B(p + 4, j), xsimd::unaligned_mode());
+                regB5 = b_t<Type, Arch>::load(&B(p + 5, j), xsimd::unaligned_mode());
+                regB6 = b_t<Type, Arch>::load(&B(p + 6, j), xsimd::unaligned_mode());
+                regB7 = b_t<Type, Arch>::load(&B(p + 7, j), xsimd::unaligned_mode());
+                regCi0 += regA0i0 * regB0 + regA1i0 * regB1 + 
+                          regA2i0 * regB2 + regA3i0 * regB3 + 
+                          regA4i0 * regB4 + regA5i0 * regB5 + 
+                          regA6i0 * regB6 + regA7i0 * regB7;
+                regCi1 += regA0i1 * regB0 + regA1i1 * regB1 + 
+                          regA2i1 * regB2 + regA3i1 * regB3 + 
+                          regA4i1 * regB4 + regA5i1 * regB5 + 
+                          regA6i1 * regB6 + regA7i1 * regB7;
                 regCi0.store_unaligned(ptrC0);
                 regCi1.store_unaligned(ptrC1);
             }
         }
     }
-    for (i = params_c.m / 2; i < params_c.m % 2; i++) {
-        for (p = 0; p < params_c.k; p += 2) { // TODO: handle tail
+    for (; i < params_c.m; i++) {
+        for (p = 0; p < params_c.k; p += 8) { // TODO: handle tail
             regA0i0 = b_t<Type, Arch>(A(i, p + 0));
             regA1i0 = b_t<Type, Arch>(A(i, p + 1));
+            regA2i0 = b_t<Type, Arch>(A(i, p + 2));
+            regA3i0 = b_t<Type, Arch>(A(i, p + 3));            
+            regA4i0 = b_t<Type, Arch>(A(i, p + 4));
+            regA5i0 = b_t<Type, Arch>(A(i, p + 5));
+            regA6i0 = b_t<Type, Arch>(A(i, p + 6));
+            regA7i0 = b_t<Type, Arch>(A(i, p + 7));    
             for (j = 0; j < params_c.n; j += inc) { // TODO: handle tail
                 ptrC0 = &C(i, j);
                 regCi0 = b_t<Type, Arch>::load(ptrC0, xsimd::unaligned_mode());
                 regB0 = b_t<Type, Arch>::load(&B(p + 0, j), xsimd::unaligned_mode());
                 regB1 = b_t<Type, Arch>::load(&B(p + 1, j), xsimd::unaligned_mode());
-                regCi0 += regA0i0 * regB0 + regA1i0 * regB1;
-
+                regB2 = b_t<Type, Arch>::load(&B(p + 2, j), xsimd::unaligned_mode());
+                regB3 = b_t<Type, Arch>::load(&B(p + 3, j), xsimd::unaligned_mode());
+                regB4 = b_t<Type, Arch>::load(&B(p + 4, j), xsimd::unaligned_mode());
+                regB5 = b_t<Type, Arch>::load(&B(p + 5, j), xsimd::unaligned_mode());
+                regB6 = b_t<Type, Arch>::load(&B(p + 6, j), xsimd::unaligned_mode());
+                regB7 = b_t<Type, Arch>::load(&B(p + 7, j), xsimd::unaligned_mode());
+                regCi0 += regA0i0 * regB0 + regA1i0 * regB1 + 
+                          regA2i0 * regB2 + regA3i0 * regB3 + 
+                          regA4i0 * regB4 + regA5i0 * regB5 + 
+                          regA6i0 * regB6 + regA7i0 * regB7;
                 regCi0.store_unaligned(ptrC0);
             }
         }

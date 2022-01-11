@@ -38,7 +38,7 @@ static void gen_random(float* a, const size_t size) {
 }
 
 TEST(Matmul, Func) {
-#define M 1
+#define M 3
 #define K 1024
 #define N 1000
     MatmulConstParam params_c;
