@@ -103,3 +103,33 @@ TEST(Eltwise, Mul) {
     EXPECT_EQ(memcmp(d.data(), d2.data(), d.size() * sizeof(float)), 0);
     EXPECT_EQ(memcmp(d.data(), answer.data(), d.size() * sizeof(float)), 0);
 }
+
+TEST(Eltwise, BatchNormal) {
+    EltwiseConstParam params_c;
+    FuseConstParams fuse_params_c;
+    fuse_params_c.num = 1;
+    fuse_params_c.types[0] = AlgType::BatchNorm;
+    fuse_params_c.params[0].x1 = 2.5f;
+    fuse_params_c.params[0].x2 = 1.3f;
+    auto f = getEltwiseFunc(params_c, fuse_params_c);
+    printf("func addr = %p\n", f.getRawPointer());
+    
+    std::array<float, 1600> x;
+    std::array<float, 1600> d;
+    std::array<float, 1600> answer;
+    x.fill(10.3f);
+    answer.fill((10.3f - 2.5f) / 1.3f);
+
+    EltwiseMutableParam params_m;
+    params_m.src_x = x.data();
+    params_m.number = x.size();
+    FuseMutableParams fuse_params_m;
+    std::array<float, 1600> d2;
+    params_m.dst_d = d2.data();
+    eltwise(params_c, params_m, fuse_params_c, fuse_params_m);
+    params_m.dst_d = d.data();
+    f(params_m, fuse_params_m);
+
+    EXPECT_EQ(memcmp(d.data(), d2.data(), d.size() * sizeof(float)), 0);
+    EXPECT_EQ(memcmp(d.data(), answer.data(), d.size() * sizeof(float)), 0);
+}

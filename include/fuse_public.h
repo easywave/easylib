@@ -18,6 +18,7 @@ enum class AlgType {
     Sub,
     Mul,
     ReLU,
+    BatchNorm,
     // BinaryConst: x = f(x, c1, c2), x is varible and c1/c2 is const
     Add_C,
     Sub_C,

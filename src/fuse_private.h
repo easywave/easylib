@@ -72,6 +72,14 @@ b_t<T, A> relu(b_t<T, A> x, const CallerContext context, const FuseMutableAlgPar
 DECLARE_EXTERN(relu)
 
 template<class T, class A>
+b_t<T, A> batch_normal(b_t<T, A> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c) {
+    b_t<T, A> e(param_c.x1);
+    b_t<T, A> v(param_c.x2);
+    return (x - e) / v;
+}
+DECLARE_EXTERN(batch_normal)
+
+template<class T, class A>
 b_t<T, A> add_c(b_t<T, A> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c) {
     b_t<T, A> c(param_c.x1);
     return x + c;
@@ -101,6 +109,7 @@ FuseConstAlgParamPrivate<Type, Arch> ConvertFuseParams(const FuseConstParams& pa
         {AlgType::Sub, sub<Type, Arch>},
         {AlgType::Mul, mul<Type, Arch>},
         {AlgType::ReLU, relu<Type, Arch>},
+        {AlgType::BatchNorm, batch_normal<Type, Arch>},
         {AlgType::Add_C, add_c<Type, Arch>},
         {AlgType::Sub_C, sub_c<Type, Arch>},
         {AlgType::Mul_C, mul_c<Type, Arch>},

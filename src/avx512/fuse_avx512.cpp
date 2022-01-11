@@ -19,6 +19,8 @@ template b_t<float, xsimd::avx512f> EASY_JIT_EXPOSE abs(b_t<float, xsimd::avx512
 
 template b_t<float, xsimd::avx512f> EASY_JIT_EXPOSE relu(b_t<float, xsimd::avx512f> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c);
 
+template b_t<float, xsimd::avx512f> EASY_JIT_EXPOSE batch_normal(b_t<float, xsimd::avx512f> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c);
+
 template b_t<float, xsimd::avx512f> EASY_JIT_EXPOSE add_c(b_t<float, xsimd::avx512f> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c);
 
 template b_t<float, xsimd::avx512f> EASY_JIT_EXPOSE sub_c(b_t<float, xsimd::avx512f> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c);
