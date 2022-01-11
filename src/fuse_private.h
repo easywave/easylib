@@ -65,6 +65,13 @@ b_t<T, A> abs(b_t<T, A> x, const CallerContext context, const FuseMutableAlgPara
 DECLARE_EXTERN(abs)
 
 template<class T, class A>
+b_t<T, A> relu(b_t<T, A> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c) {
+    b_t<T, A> c(0);
+    return xsimd::max(x, c);
+}
+DECLARE_EXTERN(relu)
+
+template<class T, class A>
 b_t<T, A> add_c(b_t<T, A> x, const CallerContext context, const FuseMutableAlgParam param_m, const FuseConstAlgParam param_c) {
     b_t<T, A> c(param_c.x1);
     return x + c;
@@ -93,6 +100,7 @@ FuseConstAlgParamPrivate<Type, Arch> ConvertFuseParams(const FuseConstParams& pa
         {AlgType::Add, add<Type, Arch>},
         {AlgType::Sub, sub<Type, Arch>},
         {AlgType::Mul, mul<Type, Arch>},
+        {AlgType::ReLU, relu<Type, Arch>},
         {AlgType::Add_C, add_c<Type, Arch>},
         {AlgType::Sub_C, sub_c<Type, Arch>},
         {AlgType::Mul_C, mul_c<Type, Arch>},

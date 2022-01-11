@@ -11,27 +11,21 @@
 #include <easy/jit.h>
 
 namespace easy {
+// eltwise operation will sit in FuseConstParams.types[0]
 struct EltwiseMutableParam {
     void *src_x;    // src x addr
-
-    void *src_y;    // src y addr
 
     void *dst_d;    // dst addr
 
     int number;
-    // EltwiseMutableParam() {
-    //     memset(this, 0, sizeof(*this));
-    // }
 };
 
 struct EltwiseConstParam {
-    AlgType alg_type;
-    float alpha;
-    float beta;
     int precision_x;       // input precision
-    int precision_y;
     int precision_inner;   // compute will use this precision
     int precision_d;       // dst precision
+    int dummy0;
+    int dummy1;
     EltwiseConstParam() {
         memset(this, 0, sizeof(*this));
     }
