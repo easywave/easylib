@@ -21,8 +21,10 @@ struct MatmulConstParam {
     int m;
     int k;
     int n;
+    int x_stride;
+    int y_stride;
+    int dst_stride;
     int precision;         // data precision
-    int dummy0;
     MatmulConstParam() {
         memset(this, 0, sizeof(*this));
     }

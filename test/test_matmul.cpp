@@ -10,9 +10,9 @@
 using namespace easy;
 
 static void matmul_ref(const MatmulConstParam& params_c, const MatmulMutableParam& params_m) {
-#define A(i, j) a[(j) + (i) * params_c.k]
-#define B(i, j) b[(j) + (i) * params_c.n]
-#define C(i, j) c[(j) + (i) * params_c.n]
+#define A(i, j) a[(j) + (i) * params_c.x_stride]
+#define B(i, j) b[(j) + (i) * params_c.y_stride]
+#define C(i, j) c[(j) + (i) * params_c.dst_stride]
 
     const auto *a = (float*)params_m.src_x;
     const auto *b = (float*)params_m.src_y;
@@ -37,15 +37,29 @@ static void gen_random(float* a, const size_t size) {
     }
 }
 
+static void elewise(float* a, const size_t size, float val) {
+
+    for (size_t i = 0; i < size; i++) {
+        a[i] += val;
+    }
+}
+
 TEST(Matmul, Func) {
-#define M 3
+#define M 6
 #define K 1024
 #define N 1000
+#define ELE_VAL -0.2f
     MatmulConstParam params_c;
     params_c.m = M;
     params_c.n = N;
     params_c.k = K;
+    params_c.x_stride = K;
+    params_c.y_stride = N;
+    params_c.dst_stride = N;
     FuseConstParams fuse_params_c;
+    fuse_params_c.num = 1;
+    fuse_params_c.types[0] = AlgType::Add_C;
+    fuse_params_c.params[0].x1 = ELE_VAL;
     auto f = getMatmulFunc(params_c, fuse_params_c);
     printf("func addr = %p\n", f.getRawPointer());
 
@@ -62,6 +76,7 @@ TEST(Matmul, Func) {
     params_m.dst_d = ref.get();
     FuseMutableParams fuse_params_m;
     matmul_ref(params_c, params_m);
+    elewise(ref.get(), M * N, ELE_VAL);
     params_m.dst_d = d.get();
     matmul(params_c, params_m, fuse_params_c, fuse_params_m);
     for (size_t i = 0; i < M * N; i++) {
